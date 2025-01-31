@@ -18,6 +18,7 @@ declare module "next-auth" {
     user: {
       id: string;
       email: string;
+      name: string;
     }
   }
 }
@@ -73,6 +74,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         user: {
           id: session.user.id,
           email: session.user.email,
+          name: user?.name || '',
         }
       };
     },
