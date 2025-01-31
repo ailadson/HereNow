@@ -14,6 +14,8 @@ model User {
   passwordHash  String
   accounts  Account[]
   sessions  Session[]
+  events    Event[]
+  sites     Site[]
 }
 
 model Account {
@@ -44,4 +46,31 @@ model VerificationToken {
   expires   DateTime
 
   @@unique([identifier, token])
+}
+
+model Event {
+  id            String   @id @default(uuid())
+  title         String
+  description   String
+  date          DateTime
+  imageURL      String?
+  videoURL      String?
+  externalLink  String?
+  userId        String
+  createdById   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user         User     @relation(fields: [userId], references: [id])
+}
+
+model Site {
+  id            String   @id @default(uuid())
+  name          String
+  userId        String
+  description   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user         User     @relation(fields: [userId], references: [id])
 }

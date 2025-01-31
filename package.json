@@ -10,7 +10,8 @@
     "postinstall": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:studio": "prisma studio",
-    "db:reset": "prisma migrate reset && prisma migrate dev --name init"
+    "db:reset": "prisma migrate reset && prisma migrate dev --name init",
+    "test": "jest"
   },
   "prisma": {
     "schema": "prisma/schema.prisma"
@@ -41,6 +42,7 @@
     "@types/react-dom": "^19",
     "eslint": "^9",
     "eslint-config-next": "15.1.6",
+    "jest": "^29.7.0",
     "postcss": "^8",
     "prisma": "^6.3.0",
     "tailwindcss": "^3.4.1",
