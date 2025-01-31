@@ -16,7 +16,7 @@ export default function Home() {
           Login
         </Link>
       )}
-      {/* @ts-ignore */}
+      {/* @ts-expect-error: Don't show signout is we are loading */}
       { session && status !== 'loading' && (
         <div>
           <Button onClick={() => signOut({ redirect: true })}>Sign Out</Button>
