@@ -2,12 +2,17 @@
 
 import bcrypt from 'bcryptjs';
 import { prisma } from '@/lib/prisma';
-import { signUpSchema } from '@/lib/zod';
-import { ZodError } from 'zod';
+import { z, ZodError } from 'zod';
 import { revalidatePath } from 'next/cache';
 import { signIn } from '@/lib/auth';
 import { InvalidLoginError } from '../errors';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
+
+export const signUpSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6,
+    "Password should be at least 6 characters long."),
+});
 
 type signUpState = { error: null | string, isSignedUp: boolean }
 
