@@ -4,3 +4,7 @@ import { twMerge } from "tailwind-merge"
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
+
+export function removeEmpty(obj: Object) {
+  return Object.fromEntries(Object.entries(obj).filter(([_, v]) => v != null));
+}

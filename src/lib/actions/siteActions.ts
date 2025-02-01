@@ -14,6 +14,13 @@ type SiteState = { error: null | string, success: boolean };
 
 export async function createSite(_: unknown, data: FormData): Promise<SiteState> {
   try {
+    const session = await auth();
+
+    if (session?.user.id !== data.get('userId')) {
+      return { error: 'Unauthorized action', success: false };
+    }
+
+
     const { name, description, userId } = await siteSchema.parseAsync({
       name: data.get('name'),
       description: data.get('description'),
