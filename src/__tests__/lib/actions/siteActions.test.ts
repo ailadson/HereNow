@@ -24,6 +24,7 @@ describe('Site Actions', () => {
   const SITE_DATA = {
     name: 'Test Site',
     description: 'A test site',
+    tagline: 'A test tagline',
   };
   const SITE = {
     ...SITE_DATA,
@@ -34,8 +35,9 @@ describe('Site Actions', () => {
   describe('createSite', () => {
     it('should create a site with valid data', async () => {
       const formData = new FormData();
-      formData.append('name', 'Test Site');
-      formData.append('description', 'A test site');
+      formData.append('name', SITE_DATA.name);
+      formData.append('description', SITE_DATA.description);
+      formData.append('tagline', SITE_DATA.tagline);
       formData.append('userId', USER_ID);
 
       (prisma.site.create as jest.Mock).mockResolvedValue(true);

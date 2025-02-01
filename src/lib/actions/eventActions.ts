@@ -4,12 +4,12 @@ import { prisma } from '@/lib/prisma';
 import { ZodError, z } from 'zod';
 import { auth } from '@/lib/auth';
 import { removeEmpty } from '../utils';
-import { ifError } from 'node:assert';
 
 // Define validation schema
 const eventSchema = z.object({
-  title: z.string().min(1, "Event title is required"),
+  name: z.string().min(1, "Event title is required"),
   description: z.string().min(1, "Description is required"),
+  tagline: z.string().min(1, "Tagline is required"),
   date: z.string().refine((val) => !isNaN(Date.parse(val)), "Invalid date"),
   userId: z.string().uuid("Unauthorized action"),
   imageURL: z.string().url().optional(),
@@ -31,9 +31,10 @@ export async function createEvent(_: unknown, data: FormData): Promise<EventStat
     }
 
     // Validate form data
-    const { title, description, date, userId, imageURL, videoURL, externalLink } = await eventSchema.parseAsync(removeEmpty({
-      title: data.get('title'),
+    const { name, description, tagline, date, userId, imageURL, videoURL, externalLink } = await eventSchema.parseAsync(removeEmpty({
+      name: data.get('name'),
       description: data.get('description'),
+      tagline: data.get('tagline'),
       date: data.get('date'),
       userId: data.get('userId'),
       imageURL: data.get('imageURL'),
@@ -44,8 +45,9 @@ export async function createEvent(_: unknown, data: FormData): Promise<EventStat
     // Create event in the database
     await prisma.event.create({
       data: {
-        title,
+        name,
         description,
+        tagline,
         date: new Date(date),
         userId,
         imageURL,
@@ -80,9 +82,10 @@ export async function updateEvent(_: unknown, data: FormData): Promise<EventStat
     if (session?.user.id !== event.userId) {
       return { error: 'Unauthorized action', success: false };
     }
-    const { title, description, date, imageURL, videoURL, externalLink } = await eventSchema.omit({ userId: true }).parseAsync(removeEmpty({
-      title: data.get('title') || event.title,
+    const { name, description, tagline, date, imageURL, videoURL, externalLink } = await eventSchema.omit({ userId: true }).parseAsync(removeEmpty({
+      name: data.get('name') || event.name,
       description: data.get('description') || event.description,
+      tagline: data.get('tagline') || event.tagline,
       date: data.get('date') || event.date,
       imageURL: data.get('imageURL') || event.imageURL,
       videoURL: data.get('videoURL') || event.videoURL,
@@ -92,8 +95,9 @@ export async function updateEvent(_: unknown, data: FormData): Promise<EventStat
     await prisma.event.update({
       where: { id },
       data: removeEmpty({
-        title,
+        name,
         description,
+        tagline,
         date: new Date(date),
         imageURL,
         videoURL,

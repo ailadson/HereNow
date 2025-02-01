@@ -22,8 +22,9 @@ jest.mock('../../../../src/lib/auth', () => ({
 
 describe('Event Actions', () => {
   const EVENT_DATA = {
-    title: 'Test Event',
+    name: 'Test Event',
     description: 'A test event',
+    tagline: 'A test tagline',
     date: '2024-10-14',
     imageURL: 'https://example.com/image.jpg',
   };
@@ -36,9 +37,10 @@ describe('Event Actions', () => {
   describe('createEvent', () => {
     it('should create an event with valid data', async () => {
       const formData = new FormData();
-      formData.append('title', 'Test Event');
-      formData.append('description', 'A test event');
-      formData.append('date', '2024-10-14');
+      formData.append('name', EVENT_DATA.name);
+      formData.append('description', EVENT_DATA.description);
+      formData.append('tagline', EVENT_DATA.tagline);
+      formData.append('date', EVENT_DATA.date);
       formData.append('userId', USER_ID);
 
       (prisma.event.create as jest.Mock).mockResolvedValue(true);
@@ -52,7 +54,7 @@ describe('Event Actions', () => {
       (auth as jest.Mock).mockReturnValueOnce(null);
 
       const formData = new FormData();
-      formData.append('title', 'Test Event');
+      formData.append('name', 'Test Event');
       formData.append('description', 'A test event');
       formData.append('date', '2024-10-14');
       formData.append('userId', INVALID_ID)
@@ -68,7 +70,7 @@ describe('Event Actions', () => {
     it('should update an existing event if user owns the event', async () => {
       const formData = new FormData();
       formData.append('id', EVENT.id);
-      formData.append('title', EVENT.title);
+      formData.append('name', EVENT.name);
       formData.append('description', 'Foo bar');
 
       (prisma.event.findUnique as jest.Mock).mockResolvedValue(EVENT);

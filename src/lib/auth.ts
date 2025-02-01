@@ -3,10 +3,9 @@ import { PrismaAdapter } from "@auth/prisma-adapter"
 import { prisma } from "@/lib/prisma"
 import Credentials from "next-auth/providers/credentials"
 import { User } from "@auth/core/types";
-import { ZodError } from "zod"
+import { z, ZodError } from "zod"
 import { v4 as uuid } from "uuid"
 import { encode } from "@auth/core/jwt"
-import { loginSchema } from "./zod"
 import bcrypt from "bcryptjs"
 import { InvalidLoginError } from "./errors"
 
@@ -22,6 +21,11 @@ declare module "next-auth" {
     }
   }
 }
+
+const loginSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6, "Password should be at least 6 characters long."),
+});
 
 const adapter = PrismaAdapter(prisma)
 export const { handlers, auth, signIn, signOut } = NextAuth({

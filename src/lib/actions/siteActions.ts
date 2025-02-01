@@ -7,6 +7,7 @@ import { auth } from '@/lib/auth';
 const siteSchema = z.object({
   name: z.string().min(1, "Site name is required"),
   description: z.string().min(1, "Description is required"),
+  tagline: z.string().min(1, "Tagline is required"),
   userId: z.string().uuid("Invalid user ID"),
 });
 
@@ -21,9 +22,10 @@ export async function createSite(_: unknown, data: FormData): Promise<SiteState>
     }
 
 
-    const { name, description, userId } = await siteSchema.parseAsync({
+    const { name, description, tagline, userId } = await siteSchema.parseAsync({
       name: data.get('name'),
       description: data.get('description'),
+      tagline: data.get('tagline'),
       userId: data.get('userId'),
     });
 
@@ -31,6 +33,7 @@ export async function createSite(_: unknown, data: FormData): Promise<SiteState>
       data: {
         name,
         description,
+        tagline,
         userId,
       },
     });
@@ -61,9 +64,10 @@ export async function updateSite(_: unknown, data: FormData): Promise<SiteState>
       return { error: 'Unauthorized action', success: false };
     }
 
-    const { name, description } = await siteSchema.omit({ userId: true }).parseAsync({
-      name: data.get('name'),
-      description: data.get('description'),
+    const { name, description, tagline } = await siteSchema.omit({ userId: true }).parseAsync({
+      name: data.get('name') || site.name,
+      description: data.get('description') || site.description,
+      tagline: data.get('tagline') || site.tagline,
     });
 
     await prisma.site.update({
@@ -71,6 +75,7 @@ export async function updateSite(_: unknown, data: FormData): Promise<SiteState>
       data: {
         name,
         description,
+        tagline,
       },
     });
 
