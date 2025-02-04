@@ -44,4 +44,50 @@ model VerificationToken {
   expires   DateTime
 
   @@unique([identifier, token])
+<<<<<<< Updated upstream
 }
+=======
+}
+
+model Event {
+  id            String   @id @default(uuid())
+  name         String
+  description   String
+  tagline       String
+  date          DateTime
+  eventMedia    EventMedia[]
+  externalLink  String?
+  userId        String
+  createdById   String
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user         User     @relation(fields: [userId], references: [id])
+}
+
+model EventMedia {
+  id        String   @id @default(uuid())
+  eventId   String
+  imageURL  String?
+  videoURL  String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  event     Event    @relation(fields: [eventId], references: [id])
+}
+
+model Site {
+  id            String   @id @default(uuid())
+  name          String
+  userId        String
+  description   String
+  tagline       String
+  imageURL      String?
+  videoURL      String?
+  externalLink  String?
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  user         User     @relation(fields: [userId], references: [id])
+}
+>>>>>>> Stashed changes

@@ -9,6 +9,15 @@ import { signIn } from '@/lib/auth';
 import { InvalidLoginError } from '../errors';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/library';
 
+<<<<<<< Updated upstream
+=======
+const signUpSchema = z.object({
+  email: z.string().email(),
+  password: z.string().min(6,
+    "Password should be at least 6 characters long."),
+});
+
+>>>>>>> Stashed changes
 type signUpState = { error: null | string, isSignedUp: boolean }
 
 export async function signupUser(_: unknown, data: FormData): Promise<signUpState> {
